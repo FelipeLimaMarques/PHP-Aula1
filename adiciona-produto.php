@@ -4,18 +4,24 @@
 $nome = $_GET["nome"];
 $preco = $_GET["preco"];
 
-$query = "insert into produtos (nome, preco) values ('{$nome}', {$preco})";
-
 $conexao = mysqli_connect('localhost', 'root', '', 'loja');
 
-if(mysqli_query($conexao, $query)) { ?>
+if(insereProduto($nome, $preco, $conexao)) { ?>
     <p class="alert-success">
         Produto <?= $nome; ?>, <?= $preco; ?> adicionado com sucesso!
     </p>
-<?php } else { ?>
+<?php } else { $msg = mysqli_error($conexao); ?>
     <p class="alert-danger">
-        Produto <?= $nome; ?> não foi adicionado.
+        Produto <?= $nome; ?> não foi adicionado: <?= $msg ?>.
     </p>
-<?php } ?>
+<?php } 
+
+function insereProduto ($nome, $preco, $conexao){
+    $query = "insert into produtos (nome, preco) values ('{$nome}', {$preco})";
+    $resultadoDaInsercao = mysqli_query($conexao, $query);
+    return $resultadoDaInsercao;
+}
+
+?>
 
 <?php include("rodape.php"); ?>
